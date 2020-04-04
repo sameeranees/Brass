@@ -1,0 +1,627 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="BrassModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Bill">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="billNumber" Type="int" Nullable="false" />
+          <Property Name="vendorId" Type="int" />
+          <Property Name="productId" Type="int" />
+          <Property Name="dueDate" Type="date" />
+          <Property Name="date" Type="date" Nullable="false" />
+          <Property Name="notes" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="Customer">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="email" Type="nvarchar" MaxLength="50" />
+          <Property Name="phone" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="addressLine1" Type="nvarchar" MaxLength="50" />
+          <Property Name="addressLine2" Type="nvarchar" MaxLength="50" />
+          <Property Name="city" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="postalCode" Type="int" />
+          <Property Name="Country" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="State" Type="nvarchar" MaxLength="50" />
+          <Property Name="accountNumber" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Estimate">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="customerId" Type="int" />
+          <Property Name="productId" Type="int" />
+          <Property Name="date" Type="date" Nullable="false" />
+          <Property Name="expiresOn" Type="date" />
+          <Property Name="subHeading" Type="nvarchar" MaxLength="50" />
+          <Property Name="footer" Type="nvarchar" MaxLength="50" />
+          <Property Name="memo" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Invoice">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="number" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="customerId" Type="int" />
+          <Property Name="productId" Type="int" />
+          <Property Name="date" Type="date" Nullable="false" />
+          <Property Name="paymentDue" Type="date" />
+        </EntityType>
+        <EntityType Name="Product">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="description" Type="nvarchar" MaxLength="100" />
+          <Property Name="price" Type="float" Nullable="false" />
+          <Property Name="sellThis" Type="bit" />
+          <Property Name="buyThis" Type="bit" />
+          <Property Name="salesTax" Type="int" />
+        </EntityType>
+        <EntityType Name="Transaction">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="incomeExpense" Type="bit" />
+          <Property Name="salesTax" Type="int" />
+          <Property Name="description" Type="nvarchar" MaxLength="100" />
+          <Property Name="account" Type="nvarchar" MaxLength="50" />
+          <Property Name="date" Type="date" Nullable="false" />
+          <Property Name="depositWithdrawal" Type="bit" />
+          <Property Name="totalAmount" Type="float" />
+          <Property Name="category" Type="nvarchar" MaxLength="50" />
+          <Property Name="notes" Type="nvarchar" MaxLength="50" />
+          <Property Name="customerId" Type="int" />
+          <Property Name="vendorId" Type="int" />
+        </EntityType>
+        <EntityType Name="Vendor">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="companyName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="email" Type="nvarchar" MaxLength="50" />
+          <Property Name="country" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="vendorName" Type="nvarchar" MaxLength="50" />
+          <Property Name="city" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="state" Type="nvarchar" MaxLength="50" />
+          <Property Name="addressLine1" Type="nvarchar" MaxLength="50" />
+          <Property Name="addressLine2" Type="nvarchar" MaxLength="50" />
+          <Property Name="postalCode" Type="int" />
+        </EntityType>
+        <Association Name="FK_Bill_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="0..1" />
+          <End Role="Bill" Type="Self.Bill" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Bill">
+              <PropertyRef Name="productId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Bill_Vendor">
+          <End Role="Vendor" Type="Self.Vendor" Multiplicity="0..1" />
+          <End Role="Bill" Type="Self.Bill" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Vendor">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Bill">
+              <PropertyRef Name="vendorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Estimate_Customer">
+          <End Role="Customer" Type="Self.Customer" Multiplicity="0..1" />
+          <End Role="Estimate" Type="Self.Estimate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Estimate">
+              <PropertyRef Name="customerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Estimate_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="0..1" />
+          <End Role="Estimate" Type="Self.Estimate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Estimate">
+              <PropertyRef Name="productId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Invoice_Customer">
+          <End Role="Customer" Type="Self.Customer" Multiplicity="0..1" />
+          <End Role="Invoice" Type="Self.Invoice" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Invoice">
+              <PropertyRef Name="customerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Invoice_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="0..1" />
+          <End Role="Invoice" Type="Self.Invoice" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Invoice">
+              <PropertyRef Name="productId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Transaction_Customer">
+          <End Role="Customer" Type="Self.Customer" Multiplicity="0..1" />
+          <End Role="Transaction" Type="Self.Transaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Transaction">
+              <PropertyRef Name="customerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Transaction_Vendor">
+          <End Role="Vendor" Type="Self.Vendor" Multiplicity="0..1" />
+          <End Role="Transaction" Type="Self.Transaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Vendor">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Transaction">
+              <PropertyRef Name="vendorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="BrassModelStoreContainer">
+          <EntitySet Name="Bill" EntityType="Self.Bill" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Customer" EntityType="Self.Customer" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Estimate" EntityType="Self.Estimate" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Invoice" EntityType="Self.Invoice" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Product" EntityType="Self.Product" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Transaction" EntityType="Self.Transaction" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Vendor" EntityType="Self.Vendor" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Bill_Product" Association="Self.FK_Bill_Product">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="Bill" EntitySet="Bill" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Bill_Vendor" Association="Self.FK_Bill_Vendor">
+            <End Role="Vendor" EntitySet="Vendor" />
+            <End Role="Bill" EntitySet="Bill" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Estimate_Customer" Association="Self.FK_Estimate_Customer">
+            <End Role="Customer" EntitySet="Customer" />
+            <End Role="Estimate" EntitySet="Estimate" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Estimate_Product" Association="Self.FK_Estimate_Product">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="Estimate" EntitySet="Estimate" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Invoice_Customer" Association="Self.FK_Invoice_Customer">
+            <End Role="Customer" EntitySet="Customer" />
+            <End Role="Invoice" EntitySet="Invoice" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Invoice_Product" Association="Self.FK_Invoice_Product">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="Invoice" EntitySet="Invoice" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Transaction_Customer" Association="Self.FK_Transaction_Customer">
+            <End Role="Customer" EntitySet="Customer" />
+            <End Role="Transaction" EntitySet="Transaction" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Transaction_Vendor" Association="Self.FK_Transaction_Vendor">
+            <End Role="Vendor" EntitySet="Vendor" />
+            <End Role="Transaction" EntitySet="Transaction" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="BrassModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Bill">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="billNumber" Type="Int32" Nullable="false" />
+          <Property Name="vendorId" Type="Int32" />
+          <Property Name="productId" Type="Int32" />
+          <Property Name="dueDate" Type="DateTime" Precision="0" />
+          <Property Name="date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="notes" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Product" Relationship="Self.FK_Bill_Product" FromRole="Bill" ToRole="Product" />
+          <NavigationProperty Name="Vendor" Relationship="Self.FK_Bill_Vendor" FromRole="Bill" ToRole="Vendor" />
+        </EntityType>
+        <EntityType Name="Customer">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="phone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="addressLine1" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="addressLine2" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="city" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="postalCode" Type="Int32" />
+          <Property Name="Country" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="State" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="accountNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Estimates" Relationship="Self.FK_Estimate_Customer" FromRole="Customer" ToRole="Estimate" />
+          <NavigationProperty Name="Invoices" Relationship="Self.FK_Invoice_Customer" FromRole="Customer" ToRole="Invoice" />
+          <NavigationProperty Name="Transactions" Relationship="Self.FK_Transaction_Customer" FromRole="Customer" ToRole="Transaction" />
+        </EntityType>
+        <EntityType Name="Estimate">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="customerId" Type="Int32" />
+          <Property Name="productId" Type="Int32" />
+          <Property Name="date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="expiresOn" Type="DateTime" Precision="0" />
+          <Property Name="subHeading" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="footer" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="memo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Customer" Relationship="Self.FK_Estimate_Customer" FromRole="Estimate" ToRole="Customer" />
+          <NavigationProperty Name="Product" Relationship="Self.FK_Estimate_Product" FromRole="Estimate" ToRole="Product" />
+        </EntityType>
+        <EntityType Name="Invoice">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="number" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="customerId" Type="Int32" />
+          <Property Name="productId" Type="Int32" />
+          <Property Name="date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="paymentDue" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="Customer" Relationship="Self.FK_Invoice_Customer" FromRole="Invoice" ToRole="Customer" />
+          <NavigationProperty Name="Product" Relationship="Self.FK_Invoice_Product" FromRole="Invoice" ToRole="Product" />
+        </EntityType>
+        <EntityType Name="Product">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="description" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="price" Type="Double" Nullable="false" />
+          <Property Name="sellThis" Type="Boolean" />
+          <Property Name="buyThis" Type="Boolean" />
+          <Property Name="salesTax" Type="Int32" />
+          <NavigationProperty Name="Bills" Relationship="Self.FK_Bill_Product" FromRole="Product" ToRole="Bill" />
+          <NavigationProperty Name="Estimates" Relationship="Self.FK_Estimate_Product" FromRole="Product" ToRole="Estimate" />
+          <NavigationProperty Name="Invoices" Relationship="Self.FK_Invoice_Product" FromRole="Product" ToRole="Invoice" />
+        </EntityType>
+        <EntityType Name="Transaction">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="incomeExpense" Type="Boolean" />
+          <Property Name="salesTax" Type="Int32" />
+          <Property Name="description" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="account" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="depositWithdrawal" Type="Boolean" />
+          <Property Name="totalAmount" Type="Double" />
+          <Property Name="category" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="notes" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="customerId" Type="Int32" />
+          <Property Name="vendorId" Type="Int32" />
+          <NavigationProperty Name="Customer" Relationship="Self.FK_Transaction_Customer" FromRole="Transaction" ToRole="Customer" />
+          <NavigationProperty Name="Vendor" Relationship="Self.FK_Transaction_Vendor" FromRole="Transaction" ToRole="Vendor" />
+        </EntityType>
+        <EntityType Name="Vendor">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="companyName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="country" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="vendorName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="city" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="state" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="addressLine1" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="addressLine2" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="postalCode" Type="Int32" />
+          <NavigationProperty Name="Bills" Relationship="Self.FK_Bill_Vendor" FromRole="Vendor" ToRole="Bill" />
+          <NavigationProperty Name="Transactions" Relationship="Self.FK_Transaction_Vendor" FromRole="Vendor" ToRole="Transaction" />
+        </EntityType>
+        <Association Name="FK_Bill_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="0..1" />
+          <End Role="Bill" Type="Self.Bill" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Bill">
+              <PropertyRef Name="productId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Bill_Vendor">
+          <End Role="Vendor" Type="Self.Vendor" Multiplicity="0..1" />
+          <End Role="Bill" Type="Self.Bill" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Vendor">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Bill">
+              <PropertyRef Name="vendorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Estimate_Customer">
+          <End Role="Customer" Type="Self.Customer" Multiplicity="0..1" />
+          <End Role="Estimate" Type="Self.Estimate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Estimate">
+              <PropertyRef Name="customerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Invoice_Customer">
+          <End Role="Customer" Type="Self.Customer" Multiplicity="0..1" />
+          <End Role="Invoice" Type="Self.Invoice" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Invoice">
+              <PropertyRef Name="customerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Transaction_Customer">
+          <End Role="Customer" Type="Self.Customer" Multiplicity="0..1" />
+          <End Role="Transaction" Type="Self.Transaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Transaction">
+              <PropertyRef Name="customerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Estimate_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="0..1" />
+          <End Role="Estimate" Type="Self.Estimate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Estimate">
+              <PropertyRef Name="productId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Invoice_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="0..1" />
+          <End Role="Invoice" Type="Self.Invoice" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Invoice">
+              <PropertyRef Name="productId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Transaction_Vendor">
+          <End Role="Vendor" Type="Self.Vendor" Multiplicity="0..1" />
+          <End Role="Transaction" Type="Self.Transaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Vendor">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Transaction">
+              <PropertyRef Name="vendorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="BrassEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Bills" EntityType="Self.Bill" />
+          <EntitySet Name="Customers" EntityType="Self.Customer" />
+          <EntitySet Name="Estimates" EntityType="Self.Estimate" />
+          <EntitySet Name="Invoices" EntityType="Self.Invoice" />
+          <EntitySet Name="Products" EntityType="Self.Product" />
+          <EntitySet Name="Transactions" EntityType="Self.Transaction" />
+          <EntitySet Name="Vendors" EntityType="Self.Vendor" />
+          <AssociationSet Name="FK_Bill_Product" Association="Self.FK_Bill_Product">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="Bill" EntitySet="Bills" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Bill_Vendor" Association="Self.FK_Bill_Vendor">
+            <End Role="Vendor" EntitySet="Vendors" />
+            <End Role="Bill" EntitySet="Bills" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Estimate_Customer" Association="Self.FK_Estimate_Customer">
+            <End Role="Customer" EntitySet="Customers" />
+            <End Role="Estimate" EntitySet="Estimates" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Invoice_Customer" Association="Self.FK_Invoice_Customer">
+            <End Role="Customer" EntitySet="Customers" />
+            <End Role="Invoice" EntitySet="Invoices" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Transaction_Customer" Association="Self.FK_Transaction_Customer">
+            <End Role="Customer" EntitySet="Customers" />
+            <End Role="Transaction" EntitySet="Transactions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Estimate_Product" Association="Self.FK_Estimate_Product">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="Estimate" EntitySet="Estimates" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Invoice_Product" Association="Self.FK_Invoice_Product">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="Invoice" EntitySet="Invoices" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Transaction_Vendor" Association="Self.FK_Transaction_Vendor">
+            <End Role="Vendor" EntitySet="Vendors" />
+            <End Role="Transaction" EntitySet="Transactions" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="BrassModelStoreContainer" CdmEntityContainer="BrassEntities">
+          <EntitySetMapping Name="Bills">
+            <EntityTypeMapping TypeName="BrassModel.Bill">
+              <MappingFragment StoreEntitySet="Bill">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="billNumber" ColumnName="billNumber" />
+                <ScalarProperty Name="vendorId" ColumnName="vendorId" />
+                <ScalarProperty Name="productId" ColumnName="productId" />
+                <ScalarProperty Name="dueDate" ColumnName="dueDate" />
+                <ScalarProperty Name="date" ColumnName="date" />
+                <ScalarProperty Name="notes" ColumnName="notes" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Customers">
+            <EntityTypeMapping TypeName="BrassModel.Customer">
+              <MappingFragment StoreEntitySet="Customer">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="phone" ColumnName="phone" />
+                <ScalarProperty Name="addressLine1" ColumnName="addressLine1" />
+                <ScalarProperty Name="addressLine2" ColumnName="addressLine2" />
+                <ScalarProperty Name="city" ColumnName="city" />
+                <ScalarProperty Name="postalCode" ColumnName="postalCode" />
+                <ScalarProperty Name="Country" ColumnName="Country" />
+                <ScalarProperty Name="State" ColumnName="State" />
+                <ScalarProperty Name="accountNumber" ColumnName="accountNumber" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Estimates">
+            <EntityTypeMapping TypeName="BrassModel.Estimate">
+              <MappingFragment StoreEntitySet="Estimate">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="customerId" ColumnName="customerId" />
+                <ScalarProperty Name="productId" ColumnName="productId" />
+                <ScalarProperty Name="date" ColumnName="date" />
+                <ScalarProperty Name="expiresOn" ColumnName="expiresOn" />
+                <ScalarProperty Name="subHeading" ColumnName="subHeading" />
+                <ScalarProperty Name="footer" ColumnName="footer" />
+                <ScalarProperty Name="memo" ColumnName="memo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Invoices">
+            <EntityTypeMapping TypeName="BrassModel.Invoice">
+              <MappingFragment StoreEntitySet="Invoice">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="number" ColumnName="number" />
+                <ScalarProperty Name="customerId" ColumnName="customerId" />
+                <ScalarProperty Name="productId" ColumnName="productId" />
+                <ScalarProperty Name="date" ColumnName="date" />
+                <ScalarProperty Name="paymentDue" ColumnName="paymentDue" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Products">
+            <EntityTypeMapping TypeName="BrassModel.Product">
+              <MappingFragment StoreEntitySet="Product">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="price" ColumnName="price" />
+                <ScalarProperty Name="sellThis" ColumnName="sellThis" />
+                <ScalarProperty Name="buyThis" ColumnName="buyThis" />
+                <ScalarProperty Name="salesTax" ColumnName="salesTax" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Transactions">
+            <EntityTypeMapping TypeName="BrassModel.Transaction">
+              <MappingFragment StoreEntitySet="Transaction">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="incomeExpense" ColumnName="incomeExpense" />
+                <ScalarProperty Name="salesTax" ColumnName="salesTax" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="account" ColumnName="account" />
+                <ScalarProperty Name="date" ColumnName="date" />
+                <ScalarProperty Name="depositWithdrawal" ColumnName="depositWithdrawal" />
+                <ScalarProperty Name="totalAmount" ColumnName="totalAmount" />
+                <ScalarProperty Name="category" ColumnName="category" />
+                <ScalarProperty Name="notes" ColumnName="notes" />
+                <ScalarProperty Name="customerId" ColumnName="customerId" />
+                <ScalarProperty Name="vendorId" ColumnName="vendorId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Vendors">
+            <EntityTypeMapping TypeName="BrassModel.Vendor">
+              <MappingFragment StoreEntitySet="Vendor">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="companyName" ColumnName="companyName" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="country" ColumnName="country" />
+                <ScalarProperty Name="vendorName" ColumnName="vendorName" />
+                <ScalarProperty Name="city" ColumnName="city" />
+                <ScalarProperty Name="state" ColumnName="state" />
+                <ScalarProperty Name="addressLine1" ColumnName="addressLine1" />
+                <ScalarProperty Name="addressLine2" ColumnName="addressLine2" />
+                <ScalarProperty Name="postalCode" ColumnName="postalCode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
