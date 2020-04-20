@@ -207,6 +207,9 @@
     <Compile Include="Models\Bill.cs">
       <DependentUpon>Brass.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\BillProduct.cs">
+      <DependentUpon>Brass.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Brass.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -222,14 +225,23 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Brass.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Models\Category.cs">
+      <DependentUpon>Brass.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Customer.cs">
       <DependentUpon>Brass.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Estimate.cs">
       <DependentUpon>Brass.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\EstimateProduct.cs">
+      <DependentUpon>Brass.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\Invoice.cs">
+      <DependentUpon>Brass.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\InvoiceProduct.cs">
       <DependentUpon>Brass.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ManageViewModels.cs" />
@@ -250,8 +262,15 @@
     <Content Include="App_Data\Brass_log.ldf">
       <DependentUpon>Brass.mdf</DependentUpon>
     </Content>
+    <Content Include="Content\AdminLTE\adminlte.css" />
+    <Content Include="Content\AdminLTE\adminlte.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Images\AdminLTELogo.png" />
+    <Content Include="Content\Images\user1-128x128.jpg" />
+    <Content Include="Content\Images\user2-160x160.jpg" />
+    <Content Include="Content\Images\user3-128x128.jpg" />
+    <Content Include="Content\Images\user8-128x128.jpg" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -266,6 +285,27 @@
       <DependentUpon>Brass.edmx</DependentUpon>
       <LastGenOutput>Brass.cs</LastGenOutput>
     </Content>
+    <Content Include="Plugins\bootstrap\js\bootstrap.bundle.js" />
+    <Content Include="Plugins\bootstrap\js\bootstrap.bundle.min.js" />
+    <Content Include="Plugins\fontawesome-free\css\all.css" />
+    <Content Include="Plugins\fontawesome-free\css\all.min.css" />
+    <Content Include="Plugins\fontawesome-free\css\brands.css" />
+    <Content Include="Plugins\fontawesome-free\css\brands.min.css" />
+    <Content Include="Plugins\fontawesome-free\css\fontawesome.css" />
+    <Content Include="Plugins\fontawesome-free\css\fontawesome.min.css" />
+    <Content Include="Plugins\fontawesome-free\css\regular.css" />
+    <Content Include="Plugins\fontawesome-free\css\regular.min.css" />
+    <Content Include="Plugins\fontawesome-free\css\solid.css" />
+    <Content Include="Plugins\fontawesome-free\css\solid.min.css" />
+    <Content Include="Plugins\fontawesome-free\css\svg-with-js.css" />
+    <Content Include="Plugins\fontawesome-free\css\svg-with-js.min.css" />
+    <Content Include="Plugins\fontawesome-free\css\v4-shims.css" />
+    <Content Include="Plugins\fontawesome-free\css\v4-shims.min.css" />
+    <Content Include="Plugins\fontawesome-free\webfonts\fa-brands-400.svg" />
+    <Content Include="Plugins\fontawesome-free\webfonts\fa-regular-400.svg" />
+    <Content Include="Plugins\fontawesome-free\webfonts\fa-solid-900.svg" />
+    <Content Include="Scripts\AdminLTE\adminlte.js" />
+    <Content Include="Scripts\AdminLTE\adminlte.min.js" />
     <Content Include="Scripts\ai.0.22.9-build00167.js" />
     <Content Include="Scripts\ai.0.22.9-build00167.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -273,6 +313,18 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Plugins\fontawesome-free\webfonts\fa-solid-900.woff2" />
+    <Content Include="Plugins\fontawesome-free\webfonts\fa-solid-900.woff" />
+    <Content Include="Plugins\fontawesome-free\webfonts\fa-solid-900.ttf" />
+    <Content Include="Plugins\fontawesome-free\webfonts\fa-solid-900.eot" />
+    <Content Include="Plugins\fontawesome-free\webfonts\fa-regular-400.woff2" />
+    <Content Include="Plugins\fontawesome-free\webfonts\fa-regular-400.woff" />
+    <Content Include="Plugins\fontawesome-free\webfonts\fa-regular-400.ttf" />
+    <Content Include="Plugins\fontawesome-free\webfonts\fa-regular-400.eot" />
+    <Content Include="Plugins\fontawesome-free\webfonts\fa-brands-400.woff2" />
+    <Content Include="Plugins\fontawesome-free\webfonts\fa-brands-400.woff" />
+    <Content Include="Plugins\fontawesome-free\webfonts\fa-brands-400.ttf" />
+    <Content Include="Plugins\fontawesome-free\webfonts\fa-brands-400.eot" />
     <EntityDeploy Include="Models\Brass.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>Brass.Designer.cs</LastGenOutput>
@@ -326,6 +378,8 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Shared\_SideBar.cshtml" />
+    <Content Include="Views\Shared\_NavBar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

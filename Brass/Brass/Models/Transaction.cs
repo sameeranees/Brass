@@ -15,18 +15,23 @@ namespace Brass.Models
     public partial class Transaction
     {
         public int id { get; set; }
-        public Nullable<bool> incomeExpense { get; set; }
+        public double totalAmount { get; set; }
         public Nullable<int> salesTax { get; set; }
         public string description { get; set; }
         public string account { get; set; }
         public System.DateTime date { get; set; }
-        public Nullable<bool> depositWithdrawal { get; set; }
-        public Nullable<double> totalAmount { get; set; }
-        public string category { get; set; }
-        public string notes { get; set; }
+        public string personName { get; set; }
+        public string vehicleNumber { get; set; }
+        public Nullable<bool> paymentPaid { get; set; }
+        public Nullable<bool> paymentReceived { get; set; }
+        public Nullable<bool> expense { get; set; }
+        public Nullable<bool> loanPayable { get; set; }
+        public Nullable<bool> loanReceivable { get; set; }
+        public Nullable<int> category { get; set; }
         public Nullable<int> customerId { get; set; }
         public Nullable<int> vendorId { get; set; }
     
+        public virtual Category Category { get; set; }
         public virtual Customer Customer { get; set; }
         public virtual Vendor Vendor { get; set; }
     }

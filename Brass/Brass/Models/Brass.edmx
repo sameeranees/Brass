@@ -10,12 +10,27 @@
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="int" Nullable="false" />
-          <Property Name="billNumber" Type="int" Nullable="false" />
+          <Property Name="billNumber" Type="nvarchar" MaxLength="9" Nullable="false" />
           <Property Name="vendorId" Type="int" />
-          <Property Name="productId" Type="int" />
           <Property Name="dueDate" Type="date" />
           <Property Name="date" Type="date" Nullable="false" />
           <Property Name="notes" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="BillProduct">
+          <Key>
+            <PropertyRef Name="productId" />
+            <PropertyRef Name="billId" />
+          </Key>
+          <Property Name="productId" Type="int" Nullable="false" />
+          <Property Name="billId" Type="int" Nullable="false" />
+          <Property Name="quantity" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="Customer">
           <Key>
@@ -39,12 +54,20 @@
           </Key>
           <Property Name="id" Type="int" Nullable="false" />
           <Property Name="customerId" Type="int" />
-          <Property Name="productId" Type="int" />
           <Property Name="date" Type="date" Nullable="false" />
           <Property Name="expiresOn" Type="date" />
           <Property Name="subHeading" Type="nvarchar" MaxLength="50" />
           <Property Name="footer" Type="nvarchar" MaxLength="50" />
           <Property Name="memo" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="EstimateProduct">
+          <Key>
+            <PropertyRef Name="productId" />
+            <PropertyRef Name="estimateId" />
+          </Key>
+          <Property Name="productId" Type="int" Nullable="false" />
+          <Property Name="estimateId" Type="int" Nullable="false" />
+          <Property Name="quantity" Type="nchar" MaxLength="10" Nullable="false" />
         </EntityType>
         <EntityType Name="Invoice">
           <Key>
@@ -53,9 +76,17 @@
           <Property Name="id" Type="int" Nullable="false" />
           <Property Name="number" Type="nchar" MaxLength="10" Nullable="false" />
           <Property Name="customerId" Type="int" />
-          <Property Name="productId" Type="int" />
           <Property Name="date" Type="date" Nullable="false" />
           <Property Name="paymentDue" Type="date" />
+        </EntityType>
+        <EntityType Name="InvoiceProduct">
+          <Key>
+            <PropertyRef Name="productId" />
+            <PropertyRef Name="invoiceId" />
+          </Key>
+          <Property Name="productId" Type="int" Nullable="false" />
+          <Property Name="invoiceId" Type="int" Nullable="false" />
+          <Property Name="quantity" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Product">
           <Key>
@@ -74,15 +105,19 @@
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="int" Nullable="false" />
-          <Property Name="incomeExpense" Type="bit" />
+          <Property Name="totalAmount" Type="float" Nullable="false" />
           <Property Name="salesTax" Type="int" />
           <Property Name="description" Type="nvarchar" MaxLength="100" />
           <Property Name="account" Type="nvarchar" MaxLength="50" />
           <Property Name="date" Type="date" Nullable="false" />
-          <Property Name="depositWithdrawal" Type="bit" />
-          <Property Name="totalAmount" Type="float" />
-          <Property Name="category" Type="nvarchar" MaxLength="50" />
-          <Property Name="notes" Type="nvarchar" MaxLength="50" />
+          <Property Name="personName" Type="nvarchar" MaxLength="50" />
+          <Property Name="vehicleNumber" Type="nvarchar" MaxLength="50" />
+          <Property Name="paymentPaid" Type="bit" />
+          <Property Name="paymentReceived" Type="bit" />
+          <Property Name="expense" Type="bit" />
+          <Property Name="loanPayable" Type="bit" />
+          <Property Name="loanReceivable" Type="bit" />
+          <Property Name="category" Type="int" />
           <Property Name="customerId" Type="int" />
           <Property Name="vendorId" Type="int" />
         </EntityType>
@@ -101,18 +136,6 @@
           <Property Name="addressLine2" Type="nvarchar" MaxLength="50" />
           <Property Name="postalCode" Type="int" />
         </EntityType>
-        <Association Name="FK_Bill_Product">
-          <End Role="Product" Type="Self.Product" Multiplicity="0..1" />
-          <End Role="Bill" Type="Self.Bill" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Product">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="Bill">
-              <PropertyRef Name="productId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Bill_Vendor">
           <End Role="Vendor" Type="Self.Vendor" Multiplicity="0..1" />
           <End Role="Bill" Type="Self.Bill" Multiplicity="*" />
@@ -122,6 +145,30 @@
             </Principal>
             <Dependent Role="Bill">
               <PropertyRef Name="vendorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BillProduct_Bill">
+          <End Role="Bill" Type="Self.Bill" Multiplicity="1" />
+          <End Role="BillProduct" Type="Self.BillProduct" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Bill">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="BillProduct">
+              <PropertyRef Name="billId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BillProduct_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="BillProduct" Type="Self.BillProduct" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="BillProduct">
+              <PropertyRef Name="productId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -137,14 +184,26 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Estimate_Product">
-          <End Role="Product" Type="Self.Product" Multiplicity="0..1" />
-          <End Role="Estimate" Type="Self.Estimate" Multiplicity="*" />
+        <Association Name="FK_EstimateProduct_Estimate">
+          <End Role="Estimate" Type="Self.Estimate" Multiplicity="1" />
+          <End Role="EstimateProduct" Type="Self.EstimateProduct" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Estimate">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="EstimateProduct">
+              <PropertyRef Name="estimateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EstimateProduct_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="EstimateProduct" Type="Self.EstimateProduct" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Product">
               <PropertyRef Name="id" />
             </Principal>
-            <Dependent Role="Estimate">
+            <Dependent Role="EstimateProduct">
               <PropertyRef Name="productId" />
             </Dependent>
           </ReferentialConstraint>
@@ -161,15 +220,39 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Invoice_Product">
-          <End Role="Product" Type="Self.Product" Multiplicity="0..1" />
-          <End Role="Invoice" Type="Self.Invoice" Multiplicity="*" />
+        <Association Name="FK_InvoiceProduct_Invoice">
+          <End Role="Invoice" Type="Self.Invoice" Multiplicity="1" />
+          <End Role="InvoiceProduct" Type="Self.InvoiceProduct" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Invoice">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="InvoiceProduct">
+              <PropertyRef Name="invoiceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_InvoiceProduct_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="InvoiceProduct" Type="Self.InvoiceProduct" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Product">
               <PropertyRef Name="id" />
             </Principal>
-            <Dependent Role="Invoice">
+            <Dependent Role="InvoiceProduct">
               <PropertyRef Name="productId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Transaction_Category">
+          <End Role="Category" Type="Self.Category" Multiplicity="0..1" />
+          <End Role="Transaction" Type="Self.Transaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Transaction">
+              <PropertyRef Name="category" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -199,35 +282,55 @@
         </Association>
         <EntityContainer Name="BrassModelStoreContainer">
           <EntitySet Name="Bill" EntityType="Self.Bill" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BillProduct" EntityType="Self.BillProduct" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Customer" EntityType="Self.Customer" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Estimate" EntityType="Self.Estimate" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EstimateProduct" EntityType="Self.EstimateProduct" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Invoice" EntityType="Self.Invoice" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="InvoiceProduct" EntityType="Self.InvoiceProduct" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Product" EntityType="Self.Product" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Transaction" EntityType="Self.Transaction" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Vendor" EntityType="Self.Vendor" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK_Bill_Product" Association="Self.FK_Bill_Product">
-            <End Role="Product" EntitySet="Product" />
-            <End Role="Bill" EntitySet="Bill" />
-          </AssociationSet>
           <AssociationSet Name="FK_Bill_Vendor" Association="Self.FK_Bill_Vendor">
             <End Role="Vendor" EntitySet="Vendor" />
             <End Role="Bill" EntitySet="Bill" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BillProduct_Bill" Association="Self.FK_BillProduct_Bill">
+            <End Role="Bill" EntitySet="Bill" />
+            <End Role="BillProduct" EntitySet="BillProduct" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BillProduct_Product" Association="Self.FK_BillProduct_Product">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="BillProduct" EntitySet="BillProduct" />
           </AssociationSet>
           <AssociationSet Name="FK_Estimate_Customer" Association="Self.FK_Estimate_Customer">
             <End Role="Customer" EntitySet="Customer" />
             <End Role="Estimate" EntitySet="Estimate" />
           </AssociationSet>
-          <AssociationSet Name="FK_Estimate_Product" Association="Self.FK_Estimate_Product">
-            <End Role="Product" EntitySet="Product" />
+          <AssociationSet Name="FK_EstimateProduct_Estimate" Association="Self.FK_EstimateProduct_Estimate">
             <End Role="Estimate" EntitySet="Estimate" />
+            <End Role="EstimateProduct" EntitySet="EstimateProduct" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EstimateProduct_Product" Association="Self.FK_EstimateProduct_Product">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="EstimateProduct" EntitySet="EstimateProduct" />
           </AssociationSet>
           <AssociationSet Name="FK_Invoice_Customer" Association="Self.FK_Invoice_Customer">
             <End Role="Customer" EntitySet="Customer" />
             <End Role="Invoice" EntitySet="Invoice" />
           </AssociationSet>
-          <AssociationSet Name="FK_Invoice_Product" Association="Self.FK_Invoice_Product">
-            <End Role="Product" EntitySet="Product" />
+          <AssociationSet Name="FK_InvoiceProduct_Invoice" Association="Self.FK_InvoiceProduct_Invoice">
             <End Role="Invoice" EntitySet="Invoice" />
+            <End Role="InvoiceProduct" EntitySet="InvoiceProduct" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InvoiceProduct_Product" Association="Self.FK_InvoiceProduct_Product">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="InvoiceProduct" EntitySet="InvoiceProduct" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Transaction_Category" Association="Self.FK_Transaction_Category">
+            <End Role="Category" EntitySet="Category" />
+            <End Role="Transaction" EntitySet="Transaction" />
           </AssociationSet>
           <AssociationSet Name="FK_Transaction_Customer" Association="Self.FK_Transaction_Customer">
             <End Role="Customer" EntitySet="Customer" />
@@ -248,14 +351,32 @@
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" />
-          <Property Name="billNumber" Type="Int32" Nullable="false" />
+          <Property Name="billNumber" Type="String" MaxLength="9" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="vendorId" Type="Int32" />
-          <Property Name="productId" Type="Int32" />
           <Property Name="dueDate" Type="DateTime" Precision="0" />
           <Property Name="date" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="notes" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Product" Relationship="Self.FK_Bill_Product" FromRole="Bill" ToRole="Product" />
           <NavigationProperty Name="Vendor" Relationship="Self.FK_Bill_Vendor" FromRole="Bill" ToRole="Vendor" />
+          <NavigationProperty Name="BillProducts" Relationship="Self.FK_BillProduct_Bill" FromRole="Bill" ToRole="BillProduct" />
+        </EntityType>
+        <EntityType Name="BillProduct">
+          <Key>
+            <PropertyRef Name="productId" />
+            <PropertyRef Name="billId" />
+          </Key>
+          <Property Name="productId" Type="Int32" Nullable="false" />
+          <Property Name="billId" Type="Int32" Nullable="false" />
+          <Property Name="quantity" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Bill" Relationship="Self.FK_BillProduct_Bill" FromRole="BillProduct" ToRole="Bill" />
+          <NavigationProperty Name="Product" Relationship="Self.FK_BillProduct_Product" FromRole="BillProduct" ToRole="Product" />
+        </EntityType>
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Transactions" Relationship="Self.FK_Transaction_Category" FromRole="Category" ToRole="Transaction" />
         </EntityType>
         <EntityType Name="Customer">
           <Key>
@@ -282,14 +403,24 @@
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" />
           <Property Name="customerId" Type="Int32" />
-          <Property Name="productId" Type="Int32" />
           <Property Name="date" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="expiresOn" Type="DateTime" Precision="0" />
           <Property Name="subHeading" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="footer" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="memo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Customer" Relationship="Self.FK_Estimate_Customer" FromRole="Estimate" ToRole="Customer" />
-          <NavigationProperty Name="Product" Relationship="Self.FK_Estimate_Product" FromRole="Estimate" ToRole="Product" />
+          <NavigationProperty Name="EstimateProducts" Relationship="Self.FK_EstimateProduct_Estimate" FromRole="Estimate" ToRole="EstimateProduct" />
+        </EntityType>
+        <EntityType Name="EstimateProduct">
+          <Key>
+            <PropertyRef Name="productId" />
+            <PropertyRef Name="estimateId" />
+          </Key>
+          <Property Name="productId" Type="Int32" Nullable="false" />
+          <Property Name="estimateId" Type="Int32" Nullable="false" />
+          <Property Name="quantity" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Estimate" Relationship="Self.FK_EstimateProduct_Estimate" FromRole="EstimateProduct" ToRole="Estimate" />
+          <NavigationProperty Name="Product" Relationship="Self.FK_EstimateProduct_Product" FromRole="EstimateProduct" ToRole="Product" />
         </EntityType>
         <EntityType Name="Invoice">
           <Key>
@@ -298,11 +429,21 @@
           <Property Name="id" Type="Int32" Nullable="false" />
           <Property Name="number" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
           <Property Name="customerId" Type="Int32" />
-          <Property Name="productId" Type="Int32" />
           <Property Name="date" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="paymentDue" Type="DateTime" Precision="0" />
           <NavigationProperty Name="Customer" Relationship="Self.FK_Invoice_Customer" FromRole="Invoice" ToRole="Customer" />
-          <NavigationProperty Name="Product" Relationship="Self.FK_Invoice_Product" FromRole="Invoice" ToRole="Product" />
+          <NavigationProperty Name="InvoiceProducts" Relationship="Self.FK_InvoiceProduct_Invoice" FromRole="Invoice" ToRole="InvoiceProduct" />
+        </EntityType>
+        <EntityType Name="InvoiceProduct">
+          <Key>
+            <PropertyRef Name="productId" />
+            <PropertyRef Name="invoiceId" />
+          </Key>
+          <Property Name="productId" Type="Int32" Nullable="false" />
+          <Property Name="invoiceId" Type="Int32" Nullable="false" />
+          <Property Name="quantity" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Invoice" Relationship="Self.FK_InvoiceProduct_Invoice" FromRole="InvoiceProduct" ToRole="Invoice" />
+          <NavigationProperty Name="Product" Relationship="Self.FK_InvoiceProduct_Product" FromRole="InvoiceProduct" ToRole="Product" />
         </EntityType>
         <EntityType Name="Product">
           <Key>
@@ -315,26 +456,31 @@
           <Property Name="sellThis" Type="Boolean" />
           <Property Name="buyThis" Type="Boolean" />
           <Property Name="salesTax" Type="Int32" />
-          <NavigationProperty Name="Bills" Relationship="Self.FK_Bill_Product" FromRole="Product" ToRole="Bill" />
-          <NavigationProperty Name="Estimates" Relationship="Self.FK_Estimate_Product" FromRole="Product" ToRole="Estimate" />
-          <NavigationProperty Name="Invoices" Relationship="Self.FK_Invoice_Product" FromRole="Product" ToRole="Invoice" />
+          <NavigationProperty Name="BillProducts" Relationship="Self.FK_BillProduct_Product" FromRole="Product" ToRole="BillProduct" />
+          <NavigationProperty Name="EstimateProducts" Relationship="Self.FK_EstimateProduct_Product" FromRole="Product" ToRole="EstimateProduct" />
+          <NavigationProperty Name="InvoiceProducts" Relationship="Self.FK_InvoiceProduct_Product" FromRole="Product" ToRole="InvoiceProduct" />
         </EntityType>
         <EntityType Name="Transaction">
           <Key>
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" />
-          <Property Name="incomeExpense" Type="Boolean" />
+          <Property Name="totalAmount" Type="Double" Nullable="false" />
           <Property Name="salesTax" Type="Int32" />
           <Property Name="description" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="account" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="date" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="depositWithdrawal" Type="Boolean" />
-          <Property Name="totalAmount" Type="Double" />
-          <Property Name="category" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="notes" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="personName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="vehicleNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="paymentPaid" Type="Boolean" />
+          <Property Name="paymentReceived" Type="Boolean" />
+          <Property Name="expense" Type="Boolean" />
+          <Property Name="loanPayable" Type="Boolean" />
+          <Property Name="loanReceivable" Type="Boolean" />
+          <Property Name="category" Type="Int32" />
           <Property Name="customerId" Type="Int32" />
           <Property Name="vendorId" Type="Int32" />
+          <NavigationProperty Name="Category" Relationship="Self.FK_Transaction_Category" FromRole="Transaction" ToRole="Category" />
           <NavigationProperty Name="Customer" Relationship="Self.FK_Transaction_Customer" FromRole="Transaction" ToRole="Customer" />
           <NavigationProperty Name="Vendor" Relationship="Self.FK_Transaction_Vendor" FromRole="Transaction" ToRole="Vendor" />
         </EntityType>
@@ -355,18 +501,6 @@
           <NavigationProperty Name="Bills" Relationship="Self.FK_Bill_Vendor" FromRole="Vendor" ToRole="Bill" />
           <NavigationProperty Name="Transactions" Relationship="Self.FK_Transaction_Vendor" FromRole="Vendor" ToRole="Transaction" />
         </EntityType>
-        <Association Name="FK_Bill_Product">
-          <End Role="Product" Type="Self.Product" Multiplicity="0..1" />
-          <End Role="Bill" Type="Self.Bill" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Product">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="Bill">
-              <PropertyRef Name="productId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Bill_Vendor">
           <End Role="Vendor" Type="Self.Vendor" Multiplicity="0..1" />
           <End Role="Bill" Type="Self.Bill" Multiplicity="*" />
@@ -376,6 +510,42 @@
             </Principal>
             <Dependent Role="Bill">
               <PropertyRef Name="vendorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BillProduct_Bill">
+          <End Role="Bill" Type="Self.Bill" Multiplicity="1" />
+          <End Role="BillProduct" Type="Self.BillProduct" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Bill">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="BillProduct">
+              <PropertyRef Name="billId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BillProduct_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="BillProduct" Type="Self.BillProduct" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="BillProduct">
+              <PropertyRef Name="productId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Transaction_Category">
+          <End Role="Category" Type="Self.Category" Multiplicity="0..1" />
+          <End Role="Transaction" Type="Self.Transaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Transaction">
+              <PropertyRef Name="category" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -415,26 +585,50 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Estimate_Product">
-          <End Role="Product" Type="Self.Product" Multiplicity="0..1" />
-          <End Role="Estimate" Type="Self.Estimate" Multiplicity="*" />
+        <Association Name="FK_EstimateProduct_Estimate">
+          <End Role="Estimate" Type="Self.Estimate" Multiplicity="1" />
+          <End Role="EstimateProduct" Type="Self.EstimateProduct" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Estimate">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="EstimateProduct">
+              <PropertyRef Name="estimateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EstimateProduct_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="EstimateProduct" Type="Self.EstimateProduct" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Product">
               <PropertyRef Name="id" />
             </Principal>
-            <Dependent Role="Estimate">
+            <Dependent Role="EstimateProduct">
               <PropertyRef Name="productId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Invoice_Product">
-          <End Role="Product" Type="Self.Product" Multiplicity="0..1" />
-          <End Role="Invoice" Type="Self.Invoice" Multiplicity="*" />
+        <Association Name="FK_InvoiceProduct_Invoice">
+          <End Role="Invoice" Type="Self.Invoice" Multiplicity="1" />
+          <End Role="InvoiceProduct" Type="Self.InvoiceProduct" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Invoice">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="InvoiceProduct">
+              <PropertyRef Name="invoiceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_InvoiceProduct_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="InvoiceProduct" Type="Self.InvoiceProduct" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Product">
               <PropertyRef Name="id" />
             </Principal>
-            <Dependent Role="Invoice">
+            <Dependent Role="InvoiceProduct">
               <PropertyRef Name="productId" />
             </Dependent>
           </ReferentialConstraint>
@@ -453,19 +647,31 @@
         </Association>
         <EntityContainer Name="BrassEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Bills" EntityType="Self.Bill" />
+          <EntitySet Name="BillProducts" EntityType="Self.BillProduct" />
+          <EntitySet Name="Categories" EntityType="Self.Category" />
           <EntitySet Name="Customers" EntityType="Self.Customer" />
           <EntitySet Name="Estimates" EntityType="Self.Estimate" />
+          <EntitySet Name="EstimateProducts" EntityType="Self.EstimateProduct" />
           <EntitySet Name="Invoices" EntityType="Self.Invoice" />
+          <EntitySet Name="InvoiceProducts" EntityType="Self.InvoiceProduct" />
           <EntitySet Name="Products" EntityType="Self.Product" />
           <EntitySet Name="Transactions" EntityType="Self.Transaction" />
           <EntitySet Name="Vendors" EntityType="Self.Vendor" />
-          <AssociationSet Name="FK_Bill_Product" Association="Self.FK_Bill_Product">
-            <End Role="Product" EntitySet="Products" />
-            <End Role="Bill" EntitySet="Bills" />
-          </AssociationSet>
           <AssociationSet Name="FK_Bill_Vendor" Association="Self.FK_Bill_Vendor">
             <End Role="Vendor" EntitySet="Vendors" />
             <End Role="Bill" EntitySet="Bills" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BillProduct_Bill" Association="Self.FK_BillProduct_Bill">
+            <End Role="Bill" EntitySet="Bills" />
+            <End Role="BillProduct" EntitySet="BillProducts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BillProduct_Product" Association="Self.FK_BillProduct_Product">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="BillProduct" EntitySet="BillProducts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Transaction_Category" Association="Self.FK_Transaction_Category">
+            <End Role="Category" EntitySet="Categories" />
+            <End Role="Transaction" EntitySet="Transactions" />
           </AssociationSet>
           <AssociationSet Name="FK_Estimate_Customer" Association="Self.FK_Estimate_Customer">
             <End Role="Customer" EntitySet="Customers" />
@@ -479,13 +685,21 @@
             <End Role="Customer" EntitySet="Customers" />
             <End Role="Transaction" EntitySet="Transactions" />
           </AssociationSet>
-          <AssociationSet Name="FK_Estimate_Product" Association="Self.FK_Estimate_Product">
-            <End Role="Product" EntitySet="Products" />
+          <AssociationSet Name="FK_EstimateProduct_Estimate" Association="Self.FK_EstimateProduct_Estimate">
             <End Role="Estimate" EntitySet="Estimates" />
+            <End Role="EstimateProduct" EntitySet="EstimateProducts" />
           </AssociationSet>
-          <AssociationSet Name="FK_Invoice_Product" Association="Self.FK_Invoice_Product">
+          <AssociationSet Name="FK_EstimateProduct_Product" Association="Self.FK_EstimateProduct_Product">
             <End Role="Product" EntitySet="Products" />
+            <End Role="EstimateProduct" EntitySet="EstimateProducts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InvoiceProduct_Invoice" Association="Self.FK_InvoiceProduct_Invoice">
             <End Role="Invoice" EntitySet="Invoices" />
+            <End Role="InvoiceProduct" EntitySet="InvoiceProducts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InvoiceProduct_Product" Association="Self.FK_InvoiceProduct_Product">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="InvoiceProduct" EntitySet="InvoiceProducts" />
           </AssociationSet>
           <AssociationSet Name="FK_Transaction_Vendor" Association="Self.FK_Transaction_Vendor">
             <End Role="Vendor" EntitySet="Vendors" />
@@ -504,10 +718,26 @@
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="billNumber" ColumnName="billNumber" />
                 <ScalarProperty Name="vendorId" ColumnName="vendorId" />
-                <ScalarProperty Name="productId" ColumnName="productId" />
                 <ScalarProperty Name="dueDate" ColumnName="dueDate" />
                 <ScalarProperty Name="date" ColumnName="date" />
                 <ScalarProperty Name="notes" ColumnName="notes" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BillProducts">
+            <EntityTypeMapping TypeName="BrassModel.BillProduct">
+              <MappingFragment StoreEntitySet="BillProduct">
+                <ScalarProperty Name="productId" ColumnName="productId" />
+                <ScalarProperty Name="billId" ColumnName="billId" />
+                <ScalarProperty Name="quantity" ColumnName="quantity" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Categories">
+            <EntityTypeMapping TypeName="BrassModel.Category">
+              <MappingFragment StoreEntitySet="Category">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -533,12 +763,20 @@
               <MappingFragment StoreEntitySet="Estimate">
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="customerId" ColumnName="customerId" />
-                <ScalarProperty Name="productId" ColumnName="productId" />
                 <ScalarProperty Name="date" ColumnName="date" />
                 <ScalarProperty Name="expiresOn" ColumnName="expiresOn" />
                 <ScalarProperty Name="subHeading" ColumnName="subHeading" />
                 <ScalarProperty Name="footer" ColumnName="footer" />
                 <ScalarProperty Name="memo" ColumnName="memo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EstimateProducts">
+            <EntityTypeMapping TypeName="BrassModel.EstimateProduct">
+              <MappingFragment StoreEntitySet="EstimateProduct">
+                <ScalarProperty Name="productId" ColumnName="productId" />
+                <ScalarProperty Name="estimateId" ColumnName="estimateId" />
+                <ScalarProperty Name="quantity" ColumnName="quantity" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -548,9 +786,17 @@
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="number" ColumnName="number" />
                 <ScalarProperty Name="customerId" ColumnName="customerId" />
-                <ScalarProperty Name="productId" ColumnName="productId" />
                 <ScalarProperty Name="date" ColumnName="date" />
                 <ScalarProperty Name="paymentDue" ColumnName="paymentDue" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="InvoiceProducts">
+            <EntityTypeMapping TypeName="BrassModel.InvoiceProduct">
+              <MappingFragment StoreEntitySet="InvoiceProduct">
+                <ScalarProperty Name="productId" ColumnName="productId" />
+                <ScalarProperty Name="invoiceId" ColumnName="invoiceId" />
+                <ScalarProperty Name="quantity" ColumnName="quantity" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -571,15 +817,19 @@
             <EntityTypeMapping TypeName="BrassModel.Transaction">
               <MappingFragment StoreEntitySet="Transaction">
                 <ScalarProperty Name="id" ColumnName="id" />
-                <ScalarProperty Name="incomeExpense" ColumnName="incomeExpense" />
+                <ScalarProperty Name="totalAmount" ColumnName="totalAmount" />
                 <ScalarProperty Name="salesTax" ColumnName="salesTax" />
                 <ScalarProperty Name="description" ColumnName="description" />
                 <ScalarProperty Name="account" ColumnName="account" />
                 <ScalarProperty Name="date" ColumnName="date" />
-                <ScalarProperty Name="depositWithdrawal" ColumnName="depositWithdrawal" />
-                <ScalarProperty Name="totalAmount" ColumnName="totalAmount" />
+                <ScalarProperty Name="personName" ColumnName="personName" />
+                <ScalarProperty Name="vehicleNumber" ColumnName="vehicleNumber" />
+                <ScalarProperty Name="paymentPaid" ColumnName="paymentPaid" />
+                <ScalarProperty Name="paymentReceived" ColumnName="paymentReceived" />
+                <ScalarProperty Name="expense" ColumnName="expense" />
+                <ScalarProperty Name="loanPayable" ColumnName="loanPayable" />
+                <ScalarProperty Name="loanReceivable" ColumnName="loanReceivable" />
                 <ScalarProperty Name="category" ColumnName="category" />
-                <ScalarProperty Name="notes" ColumnName="notes" />
                 <ScalarProperty Name="customerId" ColumnName="customerId" />
                 <ScalarProperty Name="vendorId" ColumnName="vendorId" />
               </MappingFragment>

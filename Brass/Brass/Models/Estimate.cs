@@ -14,9 +14,14 @@ namespace Brass.Models
     
     public partial class Estimate
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Estimate()
+        {
+            this.EstimateProducts = new HashSet<EstimateProduct>();
+        }
+    
         public int id { get; set; }
         public Nullable<int> customerId { get; set; }
-        public Nullable<int> productId { get; set; }
         public System.DateTime date { get; set; }
         public Nullable<System.DateTime> expiresOn { get; set; }
         public string subHeading { get; set; }
@@ -24,6 +29,7 @@ namespace Brass.Models
         public string memo { get; set; }
     
         public virtual Customer Customer { get; set; }
-        public virtual Product Product { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<EstimateProduct> EstimateProducts { get; set; }
     }
 }

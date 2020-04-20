@@ -14,15 +14,21 @@ namespace Brass.Models
     
     public partial class Bill
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Bill()
+        {
+            this.BillProducts = new HashSet<BillProduct>();
+        }
+    
         public int id { get; set; }
-        public int billNumber { get; set; }
+        public string billNumber { get; set; }
         public Nullable<int> vendorId { get; set; }
-        public Nullable<int> productId { get; set; }
         public Nullable<System.DateTime> dueDate { get; set; }
         public System.DateTime date { get; set; }
         public string notes { get; set; }
     
-        public virtual Product Product { get; set; }
         public virtual Vendor Vendor { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<BillProduct> BillProducts { get; set; }
     }
 }

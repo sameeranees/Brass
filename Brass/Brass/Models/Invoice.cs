@@ -14,14 +14,20 @@ namespace Brass.Models
     
     public partial class Invoice
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Invoice()
+        {
+            this.InvoiceProducts = new HashSet<InvoiceProduct>();
+        }
+    
         public int id { get; set; }
         public string number { get; set; }
         public Nullable<int> customerId { get; set; }
-        public Nullable<int> productId { get; set; }
         public System.DateTime date { get; set; }
         public Nullable<System.DateTime> paymentDue { get; set; }
     
         public virtual Customer Customer { get; set; }
-        public virtual Product Product { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<InvoiceProduct> InvoiceProducts { get; set; }
     }
 }

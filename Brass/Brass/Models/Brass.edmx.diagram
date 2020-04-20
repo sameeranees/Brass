@@ -4,21 +4,29 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="d6a3ceec28694754ad4d474a1c1bd56e" Name="Diagram1" ZoomLevel="40">
-        <EntityTypeShape EntityType="BrassModel.Bill" Width="1.5" PointX="3" PointY="5" IsExpanded="true" />
-        <EntityTypeShape EntityType="BrassModel.Customer" Width="1.5" PointX="0.75" PointY="8.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="BrassModel.Estimate" Width="1.5" PointX="6" PointY="5" IsExpanded="true" />
-        <EntityTypeShape EntityType="BrassModel.Invoice" Width="1.5" PointX="3" PointY="1.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="BrassModel.Product" Width="1.5" PointX="0.75" PointY="5" IsExpanded="true" />
-        <EntityTypeShape EntityType="BrassModel.Transaction" Width="1.5" PointX="3" PointY="8.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="BrassModel.Vendor" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
-        <AssociationConnector Association="BrassModel.FK_Bill_Product" ManuallyRouted="false" />
+      <Diagram DiagramId="2a8e7552a39442428165fdbd5a7c0ede" Name="Diagram1">
+        <EntityTypeShape EntityType="BrassModel.Bill" Width="1.5" PointX="3" PointY="13.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="BrassModel.BillProduct" Width="1.5" PointX="5.25" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="BrassModel.Category" Width="1.5" PointX="5.75" PointY="3.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="BrassModel.Customer" Width="1.5" PointX="0.75" PointY="7.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="BrassModel.Estimate" Width="1.5" PointX="0.75" PointY="5.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="BrassModel.EstimateProduct" Width="1.5" PointX="9.25" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="BrassModel.Invoice" Width="1.5" PointX="3" PointY="9.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="BrassModel.InvoiceProduct" Width="1.5" PointX="5.25" PointY="10" IsExpanded="true" />
+        <EntityTypeShape EntityType="BrassModel.Product" Width="1.5" PointX="0.875" PointY="2.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="BrassModel.Transaction" Width="1.5" PointX="8" PointY="7" IsExpanded="true" />
+        <EntityTypeShape EntityType="BrassModel.Vendor" Width="1.5" PointX="5.75" PointY="12.75" IsExpanded="true" />
         <AssociationConnector Association="BrassModel.FK_Bill_Vendor" ManuallyRouted="false" />
+        <AssociationConnector Association="BrassModel.FK_BillProduct_Bill" ManuallyRouted="false" />
+        <AssociationConnector Association="BrassModel.FK_BillProduct_Product" ManuallyRouted="false" />
+        <AssociationConnector Association="BrassModel.FK_Transaction_Category" ManuallyRouted="false" />
         <AssociationConnector Association="BrassModel.FK_Estimate_Customer" ManuallyRouted="false" />
         <AssociationConnector Association="BrassModel.FK_Invoice_Customer" ManuallyRouted="false" />
         <AssociationConnector Association="BrassModel.FK_Transaction_Customer" ManuallyRouted="false" />
-        <AssociationConnector Association="BrassModel.FK_Estimate_Product" ManuallyRouted="false" />
-        <AssociationConnector Association="BrassModel.FK_Invoice_Product" ManuallyRouted="false" />
+        <AssociationConnector Association="BrassModel.FK_EstimateProduct_Estimate" ManuallyRouted="false" />
+        <AssociationConnector Association="BrassModel.FK_EstimateProduct_Product" ManuallyRouted="false" />
+        <AssociationConnector Association="BrassModel.FK_InvoiceProduct_Invoice" ManuallyRouted="false" />
+        <AssociationConnector Association="BrassModel.FK_InvoiceProduct_Product" ManuallyRouted="false" />
         <AssociationConnector Association="BrassModel.FK_Transaction_Vendor" ManuallyRouted="false" />
       </Diagram>
     </edmx:Diagrams>

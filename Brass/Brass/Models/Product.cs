@@ -17,9 +17,9 @@ namespace Brass.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Product()
         {
-            this.Bills = new HashSet<Bill>();
-            this.Estimates = new HashSet<Estimate>();
-            this.Invoices = new HashSet<Invoice>();
+            this.BillProducts = new HashSet<BillProduct>();
+            this.EstimateProducts = new HashSet<EstimateProduct>();
+            this.InvoiceProducts = new HashSet<InvoiceProduct>();
         }
     
         public int id { get; set; }
@@ -31,10 +31,10 @@ namespace Brass.Models
         public Nullable<int> salesTax { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Bill> Bills { get; set; }
+        public virtual ICollection<BillProduct> BillProducts { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Estimate> Estimates { get; set; }
+        public virtual ICollection<EstimateProduct> EstimateProducts { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Invoice> Invoices { get; set; }
+        public virtual ICollection<InvoiceProduct> InvoiceProducts { get; set; }
     }
 }
